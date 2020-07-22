@@ -3,7 +3,7 @@
 - name: Install EPEL Repo
   yum:
     name: "{{ EPEL_REPO7 }}"
-    state: latest
+    state: present
   become: yes
 
 - name: Install Latest EDB Repo

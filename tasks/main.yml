@@ -28,11 +28,11 @@
   block:
     - debug:
         msg: "YUM User Name = {{ EDB_YUM_USERNAME }} or Password = {{ EDB_YUM_PASSWORD }} are not valid!."
-  when: (EDB_YUM_USERNAME == '' or EDB_YUM_PASSWORD == '')
+  when: (EDB_YUM_USERNAME | length < 1 or EDB_YUM_PASSWORD | length < 1)
 
 # End Playbook if Credentials are not valid
 - meta: end_play
-  when: (EDB_YUM_USERNAME == '' or EDB_YUM_PASSWORD == '')
+  when: (EDB_YUM_USERNAME | length < 1 or EDB_YUM_PASSWORD | length < 1)
 
 
 - name: set FORCE_INSTALL based on the user input
@@ -53,13 +53,13 @@
 
 - name: Cleanup the repos based on force_install
   block:
-    - include_tasks: C07-RH07-{{PG_TYPE}}-rm-repos.yml
+    - include_tasks: C07-RH07-{{ PG_TYPE }}-rm-repos.yml
   when: force_install
   become: yes
   delegate_to: "{{ item.value.public_ip }}"
 
 - name: Install and Configure Postgres on CentOS7 or RHEL7
   block:
-    - include_tasks: C07-RH07-{{PG_TYPE}}-setuprepos.yml
+    - include_tasks: C07-RH07-{{ PG_TYPE }}-setuprepos.yml
   become: yes
   delegate_to: "{{ item.value.public_ip }}"
